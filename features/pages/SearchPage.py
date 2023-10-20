@@ -1,10 +1,12 @@
 from selenium.webdriver.common.by import By
 
+from features.pages.BasePage import BasePage
 
-class SearchPage:
 
-    def __init__(self,driver):
-        self.driver = driver
+class SearchPage(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)
 
     invalid_product_message_xpath ="//input[@id='button-search']/following-sibling::p"
     valid_product_message_linktext= "HP LP3065"

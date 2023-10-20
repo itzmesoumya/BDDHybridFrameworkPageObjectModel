@@ -1,10 +1,12 @@
 from selenium.webdriver.common.by import By
 
+from features.pages.BasePage import BasePage
 
-class AccountPage:
+
+class AccountPage(BasePage):
 
     def __init__(self,driver):
-        self.driver =driver
+        super().__init__(driver)
 
     edit_account_information_option_linktext= "Edit your account information"
     create_account_message_xpath ="//div[@id='content']/h1"

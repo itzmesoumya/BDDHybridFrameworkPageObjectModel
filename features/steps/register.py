@@ -4,82 +4,73 @@ from selenium.webdriver.common.by import By
 from features.pages.AccountPage import AccountPage
 from features.pages.HomePage import HomePage
 from features.pages.RegisterPage import RegisterPage
+from utilities import RandomEmailGenerator
 
 
 @given(u'I navigate to Register Page')
 def step_impl(context):
     context.home_page = HomePage(context.driver)
     context.home_page.click_on_myaccount_option()
-    context.home_page.click_on_register_option()
+    context.register_page =context.home_page.click_on_register_option()
 
 
-@when(u'I enter mandatory fields')
+@when(u'I enter below details into mandatory fields')
 def step_impl(context):
-    context.register_page =RegisterPage(context.driver)
-    context.register_page.first_name_text_field("soumya")
-    context.register_page.last_name_text_field("ranjan")
-    current_datetime = datetime.now()
-    timestamp = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    timestamp = timestamp.replace(" ", "_").replace(":", "_")
-    new_email = "soumyaranjan" + timestamp + "@gmail.com"
-    context.register_page.email_text_field(new_email)
-    context.register_page.phone_number_field("1234567890")
-    context.register_page.password_text_field("soumya")
-    context.register_page.confirm_password_text_field("soumya")
-    context.driver.find_element(By.NAME,"agree").click()
+    for row in context.table:
+        context.register_page.first_name_text_field(row["first_name"])
+        context.register_page.last_name_text_field(row["last_name"])
+        new_email = RandomEmailGenerator.get_email_address_generator()
+        context.register_page.email_text_field(new_email)
+        context.register_page.phone_number_field(row["telephoneno"])
+        context.register_page.password_text_field(row["password"])
+        context.register_page.confirm_password_text_field(row["password"])
+        context.driver.find_element(By.NAME,"agree").click()
 
 
 @when(u'I click on Continue button')
 def step_impl(context):
-    context.register_page=RegisterPage(context.driver)
-    context.register_page.click_on_continue_button()
+    context.account_page = context.register_page.click_on_continue_button()
 
 @then(u'Account should get created')
 def step_impl(context):
     expected_text = "Your Account Has Been Created!"
-    context.account_page=AccountPage(context.driver)
     assert context.account_page.display_create_account_message().__eq__(expected_text)
 
 
-@when(u'I enter all fields')
+@when(u'I enter below details into all fields')
 def step_impl(context):
-    context.register_page = RegisterPage(context.driver)
-    context.register_page.first_name_text_field("soumya")
-    context.register_page.last_name_text_field("ranjan")
-    current_datetime = datetime.now()
-    timestamp = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-    timestamp = timestamp.replace(" ", "_").replace(":", "_")
-    new_email = "soumyaranjan" + timestamp + "@gmail.com"
-    context.register_page.email_text_field(new_email)
-    context.register_page.phone_number_field("1234567890")
-    context.register_page.password_text_field("soumya")
-    context.register_page.confirm_password_text_field("soumya")
-    context.register_page.yes_radio_button()
-    context.driver.find_element(By.NAME,"agree").click()
+     for row in context.table:
+        context.register_page.first_name_text_field(row["first_name"])
+        context.register_page.last_name_text_field(row["last_name"])
+        new_email = RandomEmailGenerator.get_email_address_generator()
+        context.register_page.email_text_field(new_email)
+        context.register_page.phone_number_field(row["telephoneno"])
+        context.register_page.password_text_field(row["password"])
+        context.register_page.confirm_password_text_field(row["password"])
+        context.register_page.yes_radio_button()
+        context.driver.find_element(By.NAME,"agree").click()
 
 
 @when(u'I enter existing  account email into email field')
 def step_impl(context):
-    context.register_page = RegisterPage(context.driver)
-    context.register_page.first_name_text_field("soumya")
-    context.register_page.last_name_text_field("ranjan")
-    context.register_page.email_text_field("demoauto@gmail.com")
-    context.register_page.phone_number_field("1234567890")
-    context.register_page.password_text_field("soumya")
-    context.register_page.confirm_password_text_field("soumya")
-    context.driver.find_element(By.NAME,"agree").click()
+    for row in context.table:
+        context.register_page.first_name_text_field(row["first_name"])
+        context.register_page.last_name_text_field(row["last_name"])
+        context.register_page.email_text_field("demoauto@gmail.com")
+        context.register_page.phone_number_field(row["telephoneno"])
+        context.register_page.password_text_field(row["password"])
+        context.register_page.confirm_password_text_field(row["password"])
+        context.driver.find_element(By.NAME,"agree").click()
 
 
 @then(u'I get duplicate warning message')
 def step_impl(context):
     expected_text = "Warning: E-Mail Address is already registered!"
-    context.register_page=RegisterPage(context.driver)
     assert context.register_page.display_duplicate_warning_message().__eq__(expected_text)
 
 
 @when(u'I dont enter anything into the fields')
 def step_impl(context):
-    context.register_page = RegisterPage(context.driver)
     context.register_page.first_name_text_field("")
     context.register_page.last_name_text_field("")
     context.register_page.email_text_field("")
@@ -91,7 +82,6 @@ def step_impl(context):
 
 @then(u'Proper warning messages for every fields should be displayed')
 def step_impl(context):
-    context.register_page= RegisterPage(context.driver)
     first_name_expected = "First Name must be between 1 and 32 characters!"
     assert context.register_page.display_first_name_warning_message().__eq__(first_name_expected)
     last_name_expected = "Last Name must be between 1 and 32 characters!"

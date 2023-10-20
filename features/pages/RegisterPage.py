@@ -1,10 +1,13 @@
 from selenium.webdriver.common.by import By
 
+from features.pages.AccountPage import AccountPage
+from features.pages.BasePage import BasePage
 
-class RegisterPage:
 
-    def __init__(self,driver):
-        self.driver = driver
+class RegisterPage(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)
 
     first_name_field_id = "input-firstname"
     last_name_field_id = "input-lastname"
@@ -62,5 +65,6 @@ class RegisterPage:
 
     def click_on_continue_button(self):
         self.driver.find_element(By.XPATH,self.continue_button_xpath).click()
+        return AccountPage(self.driver)
 
 

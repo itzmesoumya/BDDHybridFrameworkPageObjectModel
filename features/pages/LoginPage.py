@@ -1,10 +1,13 @@
 from selenium.webdriver.common.by import By
 
+from features.pages.AccountPage import AccountPage
+from features.pages.BasePage import BasePage
 
-class LoginPage:
 
-    def __init__(self,driver):
-        self.driver = driver
+class LoginPage(BasePage):
+
+    def __init__(self, driver):
+        super().__init__(driver)
 
     email_field_id ="input-email"
     password_field_id ="input-password"
@@ -19,6 +22,7 @@ class LoginPage:
 
     def click_on_login_button(self):
         self.driver.find_element(By.XPATH,self.login_button_xpath).click()
+        return AccountPage(self.driver)
 
     def display_status_check(self):
         return self.driver.find_element(By.XPATH,self.account_create_message_xpath).text
